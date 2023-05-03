@@ -1,10 +1,13 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
-import { FormEvent, useState } from "react";
+import { FormEvent, useCallback, useState } from "react";
 import { SearchResults } from "@/components/SearchResults";
 
 const inter = Inter({ subsets: ["latin"] });
 
+/* useCallback situation
+ * Prop drilling with functions, to avoid re-rendering functions
+ */
 export default function Home() {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState([]);
@@ -22,6 +25,10 @@ export default function Home() {
     setResults(data);
   }
 
+  const addToWishList = useCallback(async (id: number) => {
+    console.log(id);
+  }, []);
+
   return (
     <div>
       <h1>Search</h1>
@@ -34,7 +41,7 @@ export default function Home() {
         />
       </form>
 
-      <SearchResults results={results} />
+      <SearchResults results={results} onAddToWishList={addToWishList} />
     </div>
   );
 }

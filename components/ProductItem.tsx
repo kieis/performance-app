@@ -1,5 +1,6 @@
-import { memo, useState } from "react";
-import { AddProductToWishList } from "./AddProductToWishList";
+import { memo, useState } from "react"; //can use lazy from react to dynamic imports
+import dynamic from "next/dynamic";
+import { AddProductToWishListProps } from "./AddProductToWishList";
 
 /* memo usage situations
  * 1. Pure Functional Components
@@ -7,6 +8,18 @@ import { AddProductToWishList } from "./AddProductToWishList";
  * 3. Re-renders with same props
  * 4. Medium to big size components, to see some real effect
  */
+
+const AddProductToWishList = dynamic<AddProductToWishListProps>(
+  () => {
+    //return import("./AddProductToWishList"); works only with export default
+    return import("./AddProductToWishList").then(
+      (module) => module.AddProductToWishList
+    );
+  },
+  {
+    loading: () => <span>Loading...</span>,
+  }
+);
 
 interface ProductItemProps {
   product: {

@@ -1,3 +1,9 @@
+import {
+  List as LegacyList,
+  AutoSizer,
+  ListRowRenderer,
+  ListProps,
+} from "react-virtualized";
 import { useMemo } from "react";
 import { ProductItem } from "./ProductItem";
 
@@ -5,6 +11,8 @@ import { ProductItem } from "./ProductItem";
  * 1. Heavy Calcs
  * 2. referential Equality(passing to children component)
  */
+
+const List = LegacyList as unknown as React.FC<ListProps>;
 
 interface SearchResultsProps {
   results: Array<{
@@ -25,17 +33,37 @@ export function SearchResults({
     }, 0);
   }, [results]); //(calc function, when recalc)
 
+  const rowRenderer: ListRowRenderer = ({ index, key, style }) => {
+    return (
+      <div key={key} style={style}>
+        <ProductItem
+          product={results[index]}
+          onAddToWishList={onAddToWishList}
+        />
+      </div>
+    );
+  };
+
   return (
     <div>
       <h2>{totalPrice}</h2>
 
-      {results.map((product) => {
+      <List
+        height={300}
+        rowHeight={30}
+        width={900}
+        overscanRowCount={5}
+        rowCount={results.length}
+        rowRenderer={rowRenderer}
+      />
+
+      {/* {results.map((product) => {
         return (
           <div key={product.title}>
             <ProductItem product={product} onAddToWishList={onAddToWishList} />
           </div>
         );
-      })}
+      })} */}
     </div>
   );
 }

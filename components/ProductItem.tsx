@@ -1,4 +1,5 @@
-import { memo } from "react";
+import { memo, useState } from "react";
+import { AddProductToWishList } from "./AddProductToWishList";
 
 /* memo usage situations
  * 1. Pure Functional Components
@@ -17,12 +18,19 @@ interface ProductItemProps {
 }
 
 function ProductItemComponent({ product, onAddToWishList }: ProductItemProps) {
+  const [isAddingToWishList, setIsAddingToWishList] = useState(false);
   return (
     <div>
       {product.title} - <strong>{product.price}</strong>
-      <button onClick={() => onAddToWishList(product.id)}>
-        onAddToWishList
+      <button onClick={() => setIsAddingToWishList(true)}>
+        Add to favorites
       </button>
+      {isAddingToWishList && (
+        <AddProductToWishList
+          onAddToWishList={() => onAddToWishList(product.id)}
+          onRequestClose={() => setIsAddingToWishList(false)}
+        />
+      )}
     </div>
   );
 }
